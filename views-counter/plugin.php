@@ -8,6 +8,7 @@
 			'fontcolor'=>'',
 		'background'=>'',
         'fontsize'=>'',
+        'visitors'=>'',
 		);
 
 
@@ -23,15 +24,41 @@
 
 
     public function showCounter(){
-if (isset($_COOKIE["viewCounter"])) {
-    $viewsCounter = file_get_contents($this->phpPath().'counter.txt') + 1;
-    echo '<div style="display:inline; box-sizing:border-box;padding:5px;font-size:'.$this->getValue('fontsize').';color:'.$this->getValue('fontcolor').';background:'.$this->getValue('background').'" class="views-counter">'.$viewsCounter.'</div>';
 
-}else{
-    $viewsCounter = file_get_contents($this->phpPath().'counter.txt') + 1;
-    file_put_contents($this->phpPath().'counter.txt',  $viewsCounter);
-    echo '<div style="display:inline; box-sizing:border-box;padding:5px;font-size:'.$this->getValue('fontsize').';color:'.$this->getValue('fontcolor').';background:'.$this->getValue('background').'" class="views-counter">'.$viewsCounter.'</div>';
-};
+
+
+        if($this->getValue('visitors')==='all'){
+
+            $viewsCounter = file_get_contents($this->phpPath().'counter.txt') + 1;
+            file_put_contents($this->phpPath().'counter.txt',  $viewsCounter);
+            echo '<div style="display:inline; box-sizing:border-box;padding:5px;font-size:'.$this->getValue('fontsize').';color:'.$this->getValue('fontcolor').';background:'.$this->getValue('background').'" class="views-counter">'.$viewsCounter.'</div>';
+        
+        }
+
+
+
+
+
+
+        if($this->getValue('visitors')==='unique'){
+
+    
+        if (isset($_COOKIE["viewCounter"])) {
+            $viewsCounter = file_get_contents($this->phpPath().'counter.txt');
+            echo '<div style="display:inline; box-sizing:border-box;padding:5px;font-size:'.$this->getValue('fontsize').';color:'.$this->getValue('fontcolor').';background:'.$this->getValue('background').'" class="views-counter">'.$viewsCounter.'</div>';
+        
+        }else{
+            $viewsCounter = file_get_contents($this->phpPath().'counter.txt') + 1;
+            file_put_contents($this->phpPath().'counter.txt',  $viewsCounter);
+            $newCounter = file_get_contents($this->phpPath().'counter.txt');
+            echo '<div style="display:inline; box-sizing:border-box;padding:5px;font-size:'.$this->getValue('fontsize').';color:'.$this->getValue('fontcolor').';background:'.$this->getValue('background').'" class="views-counter">'.$newCounter.'</div>';
+        };
+
+    }
+
+
+
+
     }
 
 
@@ -59,7 +86,13 @@ if (isset($_COOKIE["viewCounter"])) {
      <br>
         <p>Font size</p>
         <input type='text' name='fontsize' placeholder='13px' class='form-control' value='".$this->getValue('fontsize')."'>
-     
+        <br>
+
+        <p>Show what count visits</p>
+        <select name='visitors'>
+<option value='unique' ".($this->getValue('visitors')==="unique"?"selected":"").">Unique visitors</option>
+<option value='all' ".($this->getValue('visitors')==="all"?"selected":"").">All visitors</option>
+        </select>
 
         
         <div class='bg-danger text-light col-md-12 mt-5 py-3 d-block border text-center'>
